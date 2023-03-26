@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vocabulari</title>
+  </head>
+  <body>
+    <div>
+      <select id="lang">
+        <option value="fi">Suomi</option>
+        <option value="ca">Català</option>
+      </select>
+      <h2 id="word"></h2>
+      <input autocomplete="off" type="text" id="response" />
+      <button id="check">Check</button>
+    </div>
+
+    <script>
+      const langEl = document.getElementById("lang");
+      const wordEl = document.getElementById("word");
+      const responseEl = document.getElementById("response");
+      const checkEl = document.getElementById("check");
+
+      const availableLangs = ["ca", "fi"];
+      let lang = "fi";
+      let score = 0;
+      let count = 0;
+
+      const words = {
+        ca: {},
+
+        fi: {
+          Aktivointi: "Activació",
+          "Arvonlisävero (alv) ": "Impost sobre el valor afegit (IVA)",
+          Bruttohinta: "Preu brut",
+          Budjetti: "Pressupost",
+          Dimensio: "Dimensió",
+          "Ennakkoperintärekisteri ": "Registre de recollida anticipada",
+          Ennakkovero: "Impost anticipat",
+          Jaksotus: "Periodicitat",
+          Kassavirta: "Flux de caixa",
+          "Kiinteät kulut": "Costos fixes",
+          Kustannuspaikka: "Lloc d'emissió",
+          Käyttöpääoma: "Capital circulant",
+          Käyttöomaisuus: "Immobilitzat",
+          jaksottaminen: "periodització",
+          "Käännetty arvonlisäverovelvollisuus":
+            "Responsabilitat de l'IVA invertit",
+          "Liikevaihto ": "Vendes",
+          "Liiketulos ": "Benefici operatiu",
+          "Lomapalkkavaraus ": "Reserva de pagament de vacances",
+          "Likviditeetti ": "Liquiditat",
+          "Luottotappio ": "Pèrdua de crèdit",
+          "Maksuperuste ": "Base de pagament",
+          "Muuttuvat kulut ": "Despeses canviants",
+          "Myyntikate ": "Marge de vendes",
+          "Nettohinta ": "Preu net",
+          "Oma-aloitteiset verot ": "Impostos autoiniciats",
+          "Oma pääoma ": "Capital propi",
+          "Osatuloutus ": "Ingressos parcials",
+          "Osinko ": "Dividend",
+          "Poisto ": "Supressió",
+          "Reskontra ": "Llibre major",
+          "Sisäinen laskenta ": "Càlcul intern",
+          "Suoriteperuste ": "Base d'acumulació",
+          "SVOP, sijoitettu vapaa oma pääoma ": " capital lliure invertit",
+          "Tase ": "Balanç",
+          "Tilikausi ": "Període comptable",
+          "Tilikauden tulos ": "El resultat de l'exercici",
+          "Tilinpäätös ": "Estats financers",
+          "Tosite ": "Vale",
+          "Tuloslaskelma ": "Compte de resultats",
+          "Työantajarekisteri ": "Registre d'empresaris",
+          "Ulkoinen laskenta ": "Càlcul extern",
+          "Vaihto-omaisuus ": "Inventari",
+          "Vieras pääoma": "Capital prestat",
+          Yksityisotto: "Recepció privada",
+        },
+      };
+
+      const changeLang = () => {
+        lang = availableLangs.includes(langEl.value) ? langEl.value : "ca";
+      };
+
+      const formatWord = (word) => {
+        return word.replace(/\s?$/, "").toLowerCase();
+      };
+
+      const checkWord = () => {
+        const word = formatWord(wordEl.innerText);
+        const response = formatWord(responseEl.value);
+        const wordsKey = Object.keys(words[lang]).find((checkWord) => {
+          return formatWord(checkWord) === word;
+        });
+        const translation = formatWord(words[lang][wordsKey]);
+        if (!translation) return false;
+        if (translation === response) return true;
+        return translation;
+      };
+
+      const isBoolean = (val) => "boolean" === typeof val;
+
+      const execCheck = () => {
+        count++;
+        const result = checkWord();
+        if (isBoolean(result) && result) {
+          score++;
+          alert("Correcte!");
+          nextWord();
+          return;
+        }
+
+        alert(`La traducció correcta és: ${result}`);
+        nextWord();
+      };
+
+      const nextWord = () => {
+        const index = Math.floor(
+          Math.random() * Object.keys(words[lang]).length
+        );
+        wordEl.innerText = Object.keys(words[lang])[index];
+        responseEl.value = "";
+      };
+
+      nextWord();
+
+      document.addEventListener("keypress", (e) => {
+        if (e.keyCode === 13) checkEl.click();
+      });
+      checkEl.addEventListener("click", execCheck);
+      langEl.addEventListener("change", changeLang);
+    </script>
+  </body>
+</html>
