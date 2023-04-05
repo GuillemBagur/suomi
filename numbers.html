@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vocabulari</title>
+  </head>
+  <body>
+    <div>
+      <select id="lang">
+        <option value="fi">Suomi</option>
+        <option value="ca">Català</option>
+      </select>
+      <h2 id="number"></h2>
+      <input autocomplete="off" type="text" id="response" />
+      <button id="check">Check</button>
+    </div>
+
+    <script>
+      const langEl = document.getElementById("lang");
+      const numEl = document.getElementById("number");
+      const responseEl = document.getElementById("response");
+      const checkEl = document.getElementById("check");
+
+      const availableLangs = ["ca", "fi"];
+      let lang = "fi";
+      let score = 0;
+      let count = 0;
+
+      const numbers = {
+        0: "nolle",
+        1: "yksi",
+        2: "kaksi",
+        3: "kolme",
+        4: "nerja",
+        5: "viisi",
+        6: "kuusi",
+        7: "seitseman",
+        8: "kahdeksan",
+        9: "yhdeksan",
+      };
+
+      let toista = false;
+      const convertToWord = (digit, pos) => {
+        if (toista) {
+          toista = false;
+          return `${numbers[digit]}toista`;
+        }
+
+        const sufixes = {
+          0: (digit) => {
+            if (Number(digit) === 1) {
+              toista = true;
+              return "";
+            }
+
+            return `${digit}kymmenta`;
+          },
+        };
+
+        if (!sufixes[pos]) return numbers[digit];
+        const word = `${sufixes[pos](digit)}`;
+        return word;
+      };
+
+      const uniqueNums = {
+        10: "kymmenen",
+      };
+
+      const translateNum = (num) => {
+        const numStr = String(num);
+
+        if (uniqueNums[num]) {
+          return uniqueNums[num];
+        }
+
+        let numArray = [];
+        for (let i = 0; i < numStr.length; i++) {
+          const digit = numStr[i];
+          const digitString = convertToWord(digit, i);
+          numArray.push(digitString);
+        }
+
+        return numArray.join("");
+      };
+
+      const checkWord = () => {
+        const num = numEl.innerText;
+        const translatedNum = translateNum(num);
+        const inputWord = responseEl.value;
+        if (inputWord === translatedNum) return true;
+        return translatedNum;
+      };
+
+      const isBoolean = (val) => "boolean" === typeof val;
+
+      const execCheck = () => {
+        count++;
+        const result = checkWord();
+        if (isBoolean(result) && result) {
+          score++;
+          alert("Correcte!");
+          nextWord();
+          return;
+        }
+
+        alert(`La traducció correcta és: ${result}`);
+        nextWord();
+      };
+
+      const changeLang = () => {};
+
+      const nextWord = () => {
+        const num = Math.floor(Math.random() * 100);
+        numEl.innerText = num;
+        responseEl.value = "";
+      };
+
+      nextWord();
+
+      document.addEventListener("keypress", (e) => {
+        if (e.keyCode === 13) checkEl.click();
+      });
+      checkEl.addEventListener("click", execCheck);
+      langEl.addEventListener("change", changeLang);
+    </script>
+  </body>
+</html>
