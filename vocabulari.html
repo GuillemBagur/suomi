@@ -177,6 +177,16 @@
           
         },
       };
+      
+      const swapObject = (json) => {
+        let newJson = {};
+        Object.keys(json).forEach(key => {
+          const value = json[key];
+          newJson[value] = key;
+        });
+        
+        return newJson;
+      }
 
       const changeLang = () => {
         lang = availableLangs.includes(langEl.value) ? langEl.value : "ca";
