@@ -28,9 +28,7 @@
       let score = 0;
       let count = 0;
 
-      const words = {
-        ca: {},
-
+      let words = {
         fi: {
           Aktivointi: "Activació",
           "Arvonlisävero (alv) ": "Impost sobre el valor afegit (IVA)",
@@ -187,6 +185,8 @@
         
         return newJson;
       }
+      
+      words.ca = swapObject(words.fi);
 
       const changeLang = () => {
         lang = availableLangs.includes(langEl.value) ? langEl.value : "ca";
