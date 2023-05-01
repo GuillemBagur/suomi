@@ -190,6 +190,7 @@
 
       const changeLang = () => {
         lang = availableLangs.includes(langEl.value) ? langEl.value : "ca";
+        nextWord();
       };
 
       const formatWord = (word) => {
